@@ -1,0 +1,18 @@
+# Core
+pandas>=2.2
+numpy>=1.26
+pyarrow>=14
+tqdm>=4.66
+requests>=2.32
+
+# Notebooks
+jupyterlab>=4.2
+ipykernel>=6.29
+
+# Hugging Face datasets
+datasets>=2.19
+
+# Project libs (install from GitHub). Requires 'git' to be installed.
+# Pin to a branch or, better, a commit hash for reproducibility.
+git+https://github.com/sirisacademic/geordie@dev
+git+https://github.com/sirisacademic/affilgood@main

@@ -34,7 +34,7 @@ This work supports the Energy Planning pilot of the SciLake project by enabling:
 
 ```
 scilake-energy-pilot-geo/
-├── data/ # Example input publications (GROBID-processed XML/TEI or JSON)
+├── output/ # processed files
 ├── notebooks/ # Jupyter notebooks with usage examples
 ├── scripts/ # Helper scripts for batch processing
 ├── examples/ # Sample outputs (geotagged results)
@@ -43,61 +43,117 @@ scilake-energy-pilot-geo/
 
 ---
 
-## ⚙️ Requirements
+## 🧩 Environment setup
 
-- Python 3.9+
-- [AffilGood](https://github.com/sirisacademic/affilgood)
-- [GEORDIE](https://github.com/sirisacademic/geordie/tree/dev)
-- Jupyter (for running notebooks)
+We recommend using Python 3.10+ for best compatibility.
 
-Install dependencies:
 
-```bash
+**Conda (recommended)**
+```
+# from repo root (where environment.yml lives)
+mamba env create -f environment.yml   # or: conda env create -f environment.yml
+mamba activate sl-energy-geo          # or: conda activate sl-energy-geo
+
+# (optional) register the kernel name for Jupyter
+python -m ipykernel install --user --name sl-energy-geo
+```
+
+**Python env**
+```
+# create venv with Python 3.10 (adjust path/command if needed)
+python3.10 -m venv .venv
+source .venv/bin/activate        # macOS/Linux
+# .venv\Scripts\activate         # Windows PowerShell
+
+# upgrade pip and install dependencies
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
+
 ---
 ## 🚀 Usage
 
+A complete notebook for processing one publication is available in notebooks/demo.
+
 ### 1. Process publications with GROBID
-Extract structured metadata and full text:
-```bash
-# Example: process a batch of PDFs with GROBID
-```
+Extract structured metadata and full text, documention available [here](https://github.com/kermitt2/grobid_client_python).
 
-### 2. Run AffilGood
+### 2. Run on the sample of papers of interest
+
 ```bash
 # Example: process a batch of publications
+python scripts/run_geordie.py
+python scripts/run_affilgood.py
+python scripts/run_postprocessing.py
 ```
 
-### 3. Run GEORDIE
-```bash
-# Example: process a batch of publications
-```
-
-### 4. Combine results and output postprocessing
-- case study fixing / grouping / section processing
 ---
 ## 📊 Example Output
 ```json
 {
-  "publication_id": "12345",
-  "title": "Renewable energy integration in Southern Europe",
+  "doi": "....",
   "affiliations": [
     {
-      "raw": "Department of Energy, University of Athens, Greece",
-      "country": "Greece",
-      "lat": 37.9838,
-      "lon": 23.7275
+      "text": "....",
+      "ror": ["...."],                // normalized; multiple items possible
+      "raw_entity": "....",           // "City, Country" (from NER)
+      "osm_city": "....",
+      "osm_country": "....",
+      "osm_link": "...."
     }
   ],
-  "geographical_mentions": [
+  "title": {
+    "text": "....",
+    "entities": [
+      {
+        "raw_entity": "....",
+        "role": "Object of Study",    // see roles note below
+        "osm_entity": "....",
+        "osm_link": "....",
+        "osm_id": "....",
+        "place_id": "...."
+      }
+    ]
+  },
+  "abstract": {
+    "text": "....",
+    "entities": [
+      {
+        "raw_entity": "....",
+        "role": "Object of Study",
+        "osm_entity": "....",
+        "osm_link": "....",
+        "osm_id": "....",
+        "place_id": "...."
+      }
+    ]
+  },
+  "fulltext": [
     {
-      "mention": "Southern Europe",
-      "normalized": "Europe, Southern",
-      "role": "study_region"
+      "section_num": "....",
+      "section_name": "....",
+      "text": "....",
+      "entities": [
+        {
+          "raw_entity": "....",
+          "role": "Other",
+          "osm_entity": "....",
+          "osm_link": "....",
+          "osm_id": "....",
+          "place_id": "...."
+        }
+      ]
     }
   ]
 }
 ```
+**Notes & decisions**
+
+* We are keeping both `osm_id` and `place_id` for each geographic entity, to gather the shapes.
+* Geotagging form textual content (`geordie`): All geographic mentions are identified across the whole document—not just the object of study. We used these two types:
+  * **Object of Study** for the actual study target, locations of research, and target places (captured from title + abstract + methods).
+  * **Other** for contextual mentions elsewhere (e.g., literature review). You can safely ignore these if you only care about core study locations.
+* Affiliations (`affilgood`): organizations are normalized and geolocated. RORs are split and cleaned; when a ROR isn’t available, I fall back to the raw ORG from NER. The OSM link centers on the reported coordinates.
+
 ---
 
