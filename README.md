@@ -78,6 +78,8 @@ A complete notebook for processing one publication is available in [notebooks/de
 ### 1. Process publications with GROBID
 Extract structured metadata and full text, documention available [here](https://github.com/kermitt2/grobid_client_python).
 
+Processed publications from IJSEPM are available [here](https://huggingface.co/datasets/nicolauduran45/scilake-additional-fulltext-corpus). Disclaimer: some fields are missing for some publications due to some limitions in the tool. Those fields could be complemented with additional metadata from CrossRef and OpenAIRE.
+
 ### 2. Run on the sample of papers of interest
 
 ```bash
