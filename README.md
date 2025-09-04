@@ -73,7 +73,7 @@ pip install -r requirements.txt
 ---
 ## 🚀 Usage
 
-A complete notebook for processing one publication is available in [notebooks/demo[(https://github.com/nicolauduran45/scilake-geotagging-energy-pilot/blob/main/notebooks/demo.ipynb)].
+A complete notebook for processing one publication is available in [notebooks/demo](https://github.com/nicolauduran45/scilake-geotagging-energy-pilot/blob/main/notebooks/demo.ipynb).
 
 ### 1. Process publications with GROBID
 Extract structured metadata and full text, documention available [here](https://github.com/kermitt2/grobid_client_python).
