@@ -14,5 +14,5 @@ datasets>=2.19
 
 # Project libs (install from GitHub). Requires 'git' to be installed.
 # Pin to a branch or, better, a commit hash for reproducibility.
-git+https://github.com/sirisacademic/geordie@dev
+git+https://github.com/sirisacademic/geordie@v1.0.0
 git+https://github.com/sirisacademic/affilgood@main
